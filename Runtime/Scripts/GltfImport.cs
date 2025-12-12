@@ -71,8 +71,9 @@ namespace GLTFast
             IDownloadProvider downloadProvider = null,
             IDeferAgent deferAgent = null,
             IMaterialGenerator materialGenerator = null,
-            ICodeLogger logger = null
-        ) : base(downloadProvider, deferAgent, materialGenerator, logger) { }
+            ICodeLogger logger = null,
+            ITextureLoader textureLoader = null
+        ) : base(downloadProvider, deferAgent, materialGenerator, logger, textureLoader) { }
 
         /// <inheritdoc />
         protected override RootBase ParseJson(string json)
@@ -92,8 +93,9 @@ namespace GLTFast
             IDownloadProvider downloadProvider = null,
             IDeferAgent deferAgent = null,
             IMaterialGenerator materialGenerator = null,
-            ICodeLogger logger = null
-        ) : base(downloadProvider, deferAgent, materialGenerator, logger) { }
+            ICodeLogger logger = null,
+            ITextureLoader textureLoader = null
+        ) : base(downloadProvider, deferAgent, materialGenerator, logger, textureLoader) { }
 
         TRoot m_Root;
 
@@ -180,6 +182,7 @@ namespace GLTFast
 
         IDownloadProvider m_DownloadProvider;
         IMaterialGenerator m_MaterialGenerator;
+        ITextureLoader m_TextureLoader;
 
         Dictionary<Type, ImportAddonInstance> m_ImportInstances;
 
@@ -296,11 +299,12 @@ namespace GLTFast
             IDownloadProvider downloadProvider = null,
             IDeferAgent deferAgent = null,
             IMaterialGenerator materialGenerator = null,
-            ICodeLogger logger = null
+            ICodeLogger logger = null,
+            ITextureLoader textureLoader = null
             )
         {
             m_DownloadProvider = downloadProvider ?? new DefaultDownloadProvider();
-
+            m_TextureLoader = textureLoader ?? new UnityTextureLoader();
             if (deferAgent == null)
             {
                 if (s_DefaultDeferAgent == null
@@ -1674,17 +1678,24 @@ namespace GLTFast
 #endif
             await DeferAgent.BreakPoint();
             Profiler.BeginSample("LoadImageJpegOrPngFromDataUri");
-            // TODO: Investigate alternative: native texture creation in worker thread
+            
             var forceSampleLinear = m_ImageGamma != null && !m_ImageGamma[imageIndex];
-            var texture = CreateEmptyTexture(img, imageIndex, forceSampleLinear);
-            texture.LoadImage(
 #if UNITY_6000_0_OR_NEWER
-                data.AsReadOnlySpan(),
-#else
-                data,
-#endif
-                !LoadImageReadable(imageIndex)
+            var texture = await m_TextureLoader.LoadTextureFromNativeArrayAsync(
+                data.AsReadOnly(),
+                LoadImageReadable(imageIndex),
+                forceSampleLinear,
+                m_Settings
             );
+#else
+            var texture = await m_TextureLoader.LoadTextureFromManagedArrayAsync(
+                data,
+                LoadImageReadable(imageIndex),
+                forceSampleLinear,
+                m_Settings
+            );
+#endif
+            texture.name = GetImageName(img, imageIndex);
             Profiler.EndSample();
             return texture;
         }
@@ -1738,7 +1749,7 @@ namespace GLTFast
         }
 #endif
 
-        async Task<bool> WaitForBufferDownloads()
+            async Task<bool> WaitForBufferDownloads()
         {
             if (m_DownloadTasks != null)
             {
@@ -3415,14 +3426,16 @@ namespace GLTFast
 #if UNITY_IMAGECONVERSION
 
                         var forceSampleLinear = m_ImageGamma != null && !m_ImageGamma[i];
-                        var txt = CreateEmptyTexture(img, i, forceSampleLinear);
+
 #if UNITY_6000_0_OR_NEWER
                         Profiler.BeginSample("Texture2D.LoadImage");
                         var data = ((IGltfBuffers)this).GetBufferView(img.bufferView, out _);
-                        txt.LoadImage(data.AsNativeArrayReadOnly().AsReadOnlySpan(), !LoadImageReadable(i));
+                        var txt = await m_TextureLoader.LoadTextureFromNativeArrayAsync(data.AsNativeArrayReadOnly(), !LoadImageReadable(i), forceSampleLinear, m_Settings);
+
                         Profiler.EndSample();
                         await DeferAgent.BreakPoint();
 #else // UNITY_6000_0_OR_NEWER
+                        var txt = CreateEmptyTexture(img, i, forceSampleLinear);
                         Profiler.BeginSample("CreateTexturesFromBuffers.ExtractBuffer");
                         var bufferView = bufferViews[img.bufferView];
                         var buffer = GetBuffer(bufferView.buffer);
