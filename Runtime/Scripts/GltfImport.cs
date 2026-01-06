@@ -169,6 +169,7 @@ namespace GLTFast
             ExtensionName.MeshGPUInstancing,
             ExtensionName.LightsPunctual,
             ExtensionName.MaterialsClearcoat,
+            ExtensionName.MaterialsEmissiveStrength,
         };
 
         static IDeferAgent s_DefaultDeferAgent;

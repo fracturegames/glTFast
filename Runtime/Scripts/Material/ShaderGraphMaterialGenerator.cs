@@ -406,8 +406,12 @@ namespace GLTFast.Materials {
 
             material.SetVector(MaterialProperty.BaseColor, baseColorLinear.gamma);
 
-            if(gltfMaterial.Emissive != Color.black) {
-                material.SetColor(MaterialProperty.EmissiveFactor, gltfMaterial.Emissive);
+            Color emissiveColor = gltfMaterial.Emissive;
+            if (gltfMaterial.Extensions?.KHR_materials_emissive_strength != null)
+                emissiveColor *= gltfMaterial.Extensions.KHR_materials_emissive_strength.emissiveStrength;
+
+            if (emissiveColor != Color.black) {
+                material.SetColor(MaterialProperty.EmissiveFactor, emissiveColor);
                 material.EnableKeyword(k_EmissiveKeyword);
             }
 
