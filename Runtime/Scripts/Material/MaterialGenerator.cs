@@ -483,7 +483,7 @@ namespace GLTFast.Materials
                 // -> white/grey/black-ish color
                 // -> Approximation via Transparent mode should be close to real transmission
                 baseColorLinear.a *= 1 - transmission.transmissionFactor;
-                return true;
+                return false;
             }
             else
             {

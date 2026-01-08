@@ -369,7 +369,11 @@ namespace GLTFast.Materials {
                     renderQueue = RenderQueue.Transparent;
                 } else
 #endif
-                renderQueue = RenderQueue.AlphaTest;
+                if(gltfMaterial.Extensions.KHR_materials_transmission != null)
+                    // Transmission requires transparent render queue
+                    renderQueue = RenderQueue.Transparent;
+                else
+                    renderQueue = RenderQueue.AlphaTest;
             } else {
                 material.SetFloat(MaterialProperty.AlphaCutoff, 0);
                 // double sided opaque would make errors in HDRP 7.3 otherwise
