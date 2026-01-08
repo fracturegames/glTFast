@@ -3431,7 +3431,7 @@ namespace GLTFast
 #if UNITY_6000_0_OR_NEWER
                         Profiler.BeginSample("Texture2D.LoadImage");
                         var data = ((IGltfBuffers)this).GetBufferView(img.bufferView, out _);
-                        var txt = await m_TextureLoader.LoadTextureFromNativeArrayAsync(data.AsNativeArrayReadOnly(), !LoadImageReadable(i), forceSampleLinear, m_Settings);
+                        var txt = await m_TextureLoader.LoadTextureFromNativeArrayAsync(data.AsNativeArrayReadOnly(), LoadImageReadable(i), forceSampleLinear, m_Settings);
 
                         Profiler.EndSample();
                         await DeferAgent.BreakPoint();

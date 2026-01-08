@@ -16,7 +16,7 @@ namespace GLTFast.Loading
     {
         public Task<Texture2D> LoadTextureFromNativeArrayAsync(
             NativeArray<byte>.ReadOnly data,
-            bool markNonReadable,
+            bool markReadable,
             bool forceSampleLinear,
             ImportSettings importSettings
         )
@@ -28,14 +28,14 @@ namespace GLTFast.Loading
 #if UNITY_6000_0_OR_NEWER
             Profiler.BeginSample("Texture2D.LoadImage");
             // NativeArray<byte>.ReadOnly supports AsReadOnlySpan() on newer Unity versions
-            txt.LoadImage(data.AsReadOnlySpan(), markNonReadable);
+            txt.LoadImage(data.AsReadOnlySpan(), !markReadable);
             Profiler.EndSample();
 #else
             // Fallback for older Unity: copy to managed then call LoadImage
             var managed = new byte[data.Length];
             for (int i = 0; i < data.Length; i++) managed[i] = data[i];
             Profiler.BeginSample("Texture2D.LoadImage");
-            txt.LoadImage(managed, markNonReadable);
+            txt.LoadImage(managed, !markReadable);
             Profiler.EndSample();
 #endif
 
@@ -44,7 +44,7 @@ namespace GLTFast.Loading
 
         public Task<Texture2D> LoadTextureFromManagedArrayAsync(
             byte[] data,
-            bool markNonReadable,
+            bool markReadable,
             bool forceSampleLinear,
             ImportSettings importSettings
         )
@@ -52,7 +52,7 @@ namespace GLTFast.Loading
 
             var txt = CreateEmptyTexture(forceSampleLinear, importSettings);
             Profiler.BeginSample("Texture2D.LoadImage");
-            txt.LoadImage(data, markNonReadable);
+            txt.LoadImage(data, !markReadable);
             Profiler.EndSample();
             return Task.FromResult(txt);
         }
