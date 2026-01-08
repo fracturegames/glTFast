@@ -363,17 +363,24 @@ namespace GLTFast.Materials {
             }
 
             if (gltfMaterial.GetAlphaMode() == AlphaMode.Mask) {
+
+                if (gltfMaterial.Extensions?.KHR_materials_transmission != null)
+                {
+                    // Transmission requires transparent render queue
+                    renderQueue = RenderQueue.Transparent;
+                    gltfMaterial.alphaCutoff *= TransmissionWorkaroundAlphaMuliplier(gltfMaterial.Extensions.KHR_materials_transmission, baseColorLinear);
+
+                }
+                else
+                    renderQueue = RenderQueue.AlphaTest;
+
                 SetAlphaModeMask(gltfMaterial, material);
 #if USING_HDRP
                 if (gltfMaterial.Extensions?.KHR_materials_unlit != null) {
                     renderQueue = RenderQueue.Transparent;
                 } else
 #endif
-                if(gltfMaterial.Extensions.KHR_materials_transmission != null)
-                    // Transmission requires transparent render queue
-                    renderQueue = RenderQueue.Transparent;
-                else
-                    renderQueue = RenderQueue.AlphaTest;
+
             } else {
                 material.SetFloat(MaterialProperty.AlphaCutoff, 0);
                 // double sided opaque would make errors in HDRP 7.3 otherwise
