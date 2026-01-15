@@ -93,6 +93,8 @@ namespace GLTFast.Materials {
 
         const string k_OcclusionKeyword = "_OCCLUSION";
         const string k_EmissiveKeyword = "_EMISSIVE";
+        const string k_NormalMapKeyword = "_NORMAL_MAP";
+        const string k_MetallicRoughnessMapKeyword = "_METALLIC_ROUGHNESS_MAP";
 
         static readonly int k_BaseMapPropId = Shader.PropertyToID("baseColorTexture");
         static readonly int k_BaseMapScaleTransformPropId = Shader.PropertyToID("baseColorTexture_ST"); //TODO: support in shader!
@@ -305,7 +307,7 @@ namespace GLTFast.Materials {
                         MaterialProperty.MetallicRoughnessMapRotation,
                         MaterialProperty.MetallicRoughnessMapTexCoord
                         )) {
-                        // material.EnableKeyword(KW_METALLIC_ROUGHNESS_MAP);
+                        material.EnableKeyword(k_MetallicRoughnessMapKeyword);
                     }
 
                     // TODO: When the occlusionTexture equals the metallicRoughnessTexture, we could sample just once instead of twice.
@@ -324,7 +326,7 @@ namespace GLTFast.Materials {
                 MaterialProperty.NormalTextureRotation,
                 MaterialProperty.NormalTextureTexCoord
                 )) {
-                // material.EnableKeyword(ShaderKeyword.normalMap);
+                material.EnableKeyword(k_NormalMapKeyword);
                 material.SetFloat(MaterialProperty.NormalTextureScale,gltfMaterial.NormalTexture.scale);
             }
 
