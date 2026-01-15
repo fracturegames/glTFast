@@ -95,6 +95,7 @@ namespace GLTFast.Materials {
         const string k_EmissiveKeyword = "_EMISSIVE";
         const string k_NormalMapKeyword = "_NORMAL_MAP";
         const string k_MetallicRoughnessMapKeyword = "_METALLIC_ROUGHNESS_MAP";
+        const string k_BaseColorMapKeyword = "_BASE_COLOR_MAP";
 
         static readonly int k_BaseMapPropId = Shader.PropertyToID("baseColorTexture");
         static readonly int k_BaseMapScaleTransformPropId = Shader.PropertyToID("baseColorTexture_ST"); //TODO: support in shader!
@@ -291,6 +292,7 @@ namespace GLTFast.Materials {
                         k_BaseMapRotationPropId,
                         k_BaseMapUVChannelPropId
                         );
+                    material.EnableKeyword(k_BaseColorMapKeyword);
                 }
 
                 if (materialType==MaterialType.MetallicRoughness)
