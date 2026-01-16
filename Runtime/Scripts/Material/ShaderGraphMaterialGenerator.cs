@@ -258,6 +258,7 @@ namespace GLTFast.Materials {
                         MaterialProperty.DiffuseTextureRotation,
                         MaterialProperty.DiffuseTextureTexCoord
                         );
+                    material.EnableKeyword(k_BaseColorMapKeyword);
 
                     if (TrySetTexture(
                         specGloss.specularGlossinessTexture,
@@ -517,7 +518,7 @@ namespace GLTFast.Materials {
         }
 
         // ReSharper disable once UnusedParameter.Local
-        Shader GetUnlitShader(MaterialBase gltfMaterial) {
+        protected virtual Shader GetUnlitShader(MaterialBase gltfMaterial) {
             if (!s_UnlitShaderQueried) {
 #if UNITY_EDITOR
                 s_UnlitShader = LoadShaderByGuid(new GUID(k_UnlitShaderGuid));
@@ -531,7 +532,7 @@ namespace GLTFast.Materials {
 
 
         // ReSharper disable once UnusedParameter.Local
-        Shader GetSpecularShader(SpecularShaderFeatures features) {
+        protected virtual Shader GetSpecularShader(SpecularShaderFeatures features) {
             if (!s_SpecularShaderQueried) {
 #if UNITY_EDITOR
                 s_SpecularShader = LoadShaderByGuid(new GUID(k_SpecularShaderGuid));
