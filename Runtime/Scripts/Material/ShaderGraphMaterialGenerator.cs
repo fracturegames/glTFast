@@ -655,6 +655,18 @@ namespace GLTFast.Materials {
             }
             return feature;
         }
+
+        public override Material CreateUnlitVersionOfMaterial(Material material)
+        {
+            var unlitMaterial = new Material(material);
+            unlitMaterial.shader = GetUnlitShader(null);
+            var enabledKeywords = material.shaderKeywords;
+            foreach(var keyword in enabledKeywords)
+            {
+                unlitMaterial.EnableKeyword(keyword);
+            }
+            return unlitMaterial;
+        }
     }
 }
 #endif // GLTFAST_SHADER_GRAPH

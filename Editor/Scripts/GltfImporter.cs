@@ -189,6 +189,11 @@ namespace GLTFast.Editor
                     }
                 }
 
+                foreach(var lineOrPointMaterial in m_Gltf.LineOrPointMaterials)
+                {
+                    AddObjectToAsset(ctx, $"materials/{lineOrPointMaterial.Value.name}_Unlit", lineOrPointMaterial.Value);
+                }
+
                 if (m_Gltf.defaultMaterial != null)
                 {
                     // If a default/fallback material was created, import it as well'

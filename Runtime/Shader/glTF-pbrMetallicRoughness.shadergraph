@@ -112,6 +112,9 @@
         },
         {
             "m_Id": "e3c04bd425704bb7aa0a94475d33ffe7"
+        },
+        {
+            "m_Id": "8c906e571e334bd795e6245910c767fa"
         }
     ],
     "m_Dropdowns": [],
@@ -3875,6 +3878,31 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "8c906e571e334bd795e6245910c767fa",
+    "m_Guid": {
+        "m_GuidSerialized": "0ea4a334-27fc-4362-9799-36fa1ed558e5"
+    },
+    "m_Name": "BASE_COLOR_MAP",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "BASE_COLOR_MAP",
+    "m_DefaultReferenceName": "_BASE_COLOR_MAP",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 1,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 63,
+    "m_Entries": [],
+    "m_Value": 0,
+    "m_IsEditable": true
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "900125282ac7b882beb5072cffc52c89",
@@ -5315,6 +5343,9 @@
         },
         {
             "m_Id": "e3c04bd425704bb7aa0a94475d33ffe7"
+        },
+        {
+            "m_Id": "8c906e571e334bd795e6245910c767fa"
         }
     ]
 }

@@ -503,5 +503,10 @@ namespace GLTFast.Materials
             baseColorLinear.a *= TransmissionWorkaroundAlphaMuliplier(transmission, baseColorLinear);
             return false;
         }
+
+        public abstract UnityEngine.Material CreateUnlitVersionOfMaterial(UnityEngine.Material material);
+        
+
+
     }
 }

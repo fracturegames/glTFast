@@ -50,7 +50,7 @@ namespace GLTFast
         /// </summary>
         /// <param name="index">glTF material index</param>
         /// <returns>Corresponding Unity Material</returns>
-        Material GetMaterial(int index = 0);
+        Material GetMaterial(int index = 0, MeshTopology meshTopology = MeshTopology.Triangles);
 
         /// <summary>
         /// Returns a fallback material to be used when no material was

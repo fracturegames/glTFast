@@ -42,5 +42,7 @@ namespace GLTFast.Materials
         /// </summary>
         /// <param name="logger">Logger to be used.</param>
         void SetLogger(ICodeLogger logger);
+
+        UnityEngine.Material CreateUnlitVersionOfMaterial(UnityEngine.Material material);
     }
 }

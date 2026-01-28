@@ -255,6 +255,10 @@ namespace GLTFast
         /// <summary>Main glTF data structure</summary>
         protected abstract RootBase Root { get; set; }
         UnityEngine.Material[] m_Materials;
+
+        // 
+        Dictionary<int, UnityEngine.Material> m_LineOrPointMaterials;
+
         List<UnityEngine.Object> m_Resources;
 
         /// <summary>
@@ -823,6 +827,8 @@ namespace GLTFast
         /// </summary>
         public int MaterialCount => m_Materials?.Length ?? 0;
 
+        public Dictionary<int, UnityEngine.Material> LineOrPointMaterials => m_LineOrPointMaterials;
+
         /// <summary>
         /// Number of images
         /// </summary>
@@ -854,12 +860,29 @@ namespace GLTFast
         }
 
         /// <inheritdoc />
-        public UnityEngine.Material GetMaterial(int index = 0)
+        public UnityEngine.Material GetMaterial(int index = 0, MeshTopology meshTopology = MeshTopology.Triangles)
         {
-            if (m_Materials != null && index >= 0 && index < m_Materials.Length)
+
+            if (meshTopology == MeshTopology.Triangles)
             {
-                return m_Materials[index];
+                if (m_Materials != null && index >= 0 && index < m_Materials.Length)
+                {
+                    return m_Materials[index];
+                }
             }
+            else // Lines or Points should be treated as unlit, so we need to create an unlit variant of the main material
+            {
+                if(!m_LineOrPointMaterials.ContainsKey(index))
+                {
+                    if (m_Materials == null || index < 0 && index >= m_Materials.Length)
+                        return null;
+
+                    m_LineOrPointMaterials[index] = m_MaterialGenerator.CreateUnlitVersionOfMaterial(m_Materials[index]);
+                }
+
+                return m_LineOrPointMaterials[index];
+            }
+
             return null;
         }
 
@@ -2780,6 +2803,7 @@ namespace GLTFast
         async Task GenerateMaterials()
         {
             m_Materials = new UnityEngine.Material[Root.Materials.Count];
+            m_LineOrPointMaterials = new Dictionary<int, UnityEngine.Material>();
             for (var i = 0; i < m_Materials.Length; i++)
             {
                 await DeferAgent.BreakPoint(.0001f);

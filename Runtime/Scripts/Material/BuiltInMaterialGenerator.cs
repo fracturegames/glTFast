@@ -392,6 +392,13 @@ namespace GLTFast.Materials
             return material;
         }
 
+        public override Material CreateUnlitVersionOfMaterial(Material material)
+        {
+            var unlitMaterial = new Material(material);
+            unlitMaterial.shader = FinderShaderUnlit();
+            return unlitMaterial;
+        }
+
         /// <summary>
         /// Configures material for alpha masking.
         /// </summary>
