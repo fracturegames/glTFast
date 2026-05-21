@@ -960,7 +960,9 @@ namespace GLTFast
         public bool IsTextureYFlipped(int index = 0)
         {
 #if KTX_IS_ENABLED
-            return (m_NonFlippedYTextureIndices == null || !m_NonFlippedYTextureIndices.Contains(index)) && GetSourceTexture(index).IsKtx;
+            // FRACTURE: We run gltfpack to genreated the KTX textures so we have control to flip them at build time so we don't need to apply the flip in the shader. 
+            return false;
+            //return (m_NonFlippedYTextureIndices == null || !m_NonFlippedYTextureIndices.Contains(index)) && GetSourceTexture(index).IsKtx;
 #else
             return false;
 #endif
