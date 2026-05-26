@@ -14,6 +14,10 @@ namespace GLTFast.Loading
     /// </summary>
     public class UnityTextureLoader : ITextureLoader
     {
+
+        // Ignored on UnityTextureLoader
+        public bool UncompressedTextures { get; set; } = false;
+
         public Task<Texture2D> LoadTextureFromNativeArrayAsync(
             NativeArray<byte>.ReadOnly data,
             bool markReadable,

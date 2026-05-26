@@ -1540,6 +1540,10 @@ namespace GLTFast
                     if(texture.IsKtx) {
                         var imgIndex = texture.GetImageIndex();
                         m_ImageFormats[imgIndex] = ImageFormat.Ktx;
+
+                        // FRACTURE HACK: If we have a KTX file we'll assume the rest of the images that aren't KTX are uncompressed for a reason so 
+                        // don't let the runtime compression kick in.
+                        m_TextureLoader.UncompressedTextures = true;
                     }
                 }
 #endif // KTX_IS_ENABLED
@@ -1575,7 +1579,7 @@ namespace GLTFast
                 for (int imageIndex = 0; imageIndex < Root.Images.Count; imageIndex++)
                 {
                     var img = Root.Images[imageIndex];
-
+                    Debug.Log($"{img.uri}");
                     if (!string.IsNullOrEmpty(img.uri) && img.uri.StartsWith("data:"))
                     {
                         var imageTask = LoadImageFromDataUri(imageIndex, img);

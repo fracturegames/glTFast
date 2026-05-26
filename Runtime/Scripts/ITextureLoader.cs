@@ -11,6 +11,9 @@ namespace GLTFast.Loading
     /// </summary>
     public interface ITextureLoader
     {
+
+        public bool UncompressedTextures { get; set; }
+
         /// <summary>
         /// Create a Texture2D from a native byte array.
         /// </summary>
